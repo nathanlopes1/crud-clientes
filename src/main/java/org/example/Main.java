@@ -34,10 +34,24 @@ public class Main {
                 case 1:
                     System.out.print("Nome: ");
                     String nome = scanner.nextLine();
-                    System.out.print("CPF: ");
+                    if (nome.trim().isEmpty()) {
+                        System.out.println("Nome não pode ser vazio!");
+                        break;
+                    }
+
+                    System.out.print("CPF (11 dígitos): ");
                     String cpf = scanner.nextLine();
-                    System.out.print("CEP: ");
+                    if (cpf.length() != 11) {
+                        System.out.println("CPF inválido! Digite 11 dígitos.");
+                        break;
+                    }
+
+                    System.out.print("CEP (8 dígitos): ");
                     String cep = scanner.nextLine();
+                    if (cep.length() != 8) {
+                        System.out.println("CEP inválido! Digite 8 dígitos.");
+                        break;
+                    }
 
                     System.out.println("Buscando endereço...");
                     String[] endereco = ViaCepService.buscarEndereco(cep);
