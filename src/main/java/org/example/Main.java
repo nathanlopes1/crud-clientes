@@ -17,7 +17,7 @@ public class Main {
 
         int opcao = 0;
 
-        while (opcao != 7) {
+        while (opcao != 8) {
             System.out.println("\n=== SISTEMA DE CLIENTES E PEDIDOS ===");
             System.out.println("1 - Cadastrar Cliente");
             System.out.println("2 - Listar Clientes");
@@ -25,7 +25,8 @@ public class Main {
             System.out.println("4 - Deletar Cliente");
             System.out.println("5 - Cadastrar Pedido");
             System.out.println("6 - Listar Pedidos");
-            System.out.println("7 - Sair");
+            System.out.println("7 - Cancelar Pedido");
+            System.out.println("8 - Sair");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
             scanner.nextLine();
@@ -38,31 +39,26 @@ public class Main {
                         System.out.println("Nome não pode ser vazio!");
                         break;
                     }
-
                     System.out.print("CPF (11 dígitos): ");
                     String cpf = scanner.nextLine();
                     if (cpf.length() != 11) {
                         System.out.println("CPF inválido! Digite 11 dígitos.");
                         break;
                     }
-
                     System.out.print("CEP (8 dígitos): ");
                     String cep = scanner.nextLine();
                     if (cep.length() != 8) {
                         System.out.println("CEP inválido! Digite 8 dígitos.");
                         break;
                     }
-
                     System.out.println("Buscando endereço...");
                     String[] endereco = ViaCepService.buscarEndereco(cep);
-
                     Cliente cliente = new Cliente();
                     cliente.setNome(nome);
                     cliente.setCpf(cpf);
                     cliente.setCep(cep);
                     cliente.setCidade(endereco[0]);
                     cliente.setEstado(endereco[1]);
-
                     clienteDAO.salvar(cliente);
                     System.out.println("Cliente cadastrado! Cidade: " + endereco[0] + "/" + endereco[1]);
                     break;
@@ -104,8 +100,13 @@ public class Main {
                 case 4:
                     System.out.print("ID do cliente a deletar: ");
                     int idDeletar = scanner.nextInt();
-                    clienteDAO.deletar(idDeletar);
-                    System.out.println("Cliente deletado!");
+                    Cliente clienteDeletar = clienteDAO.buscarPorId(idDeletar);
+                    if (clienteDeletar == null) {
+                        System.out.println("Cliente não encontrado!");
+                    } else {
+                        clienteDAO.deletar(idDeletar);
+                        System.out.println("Cliente deletado!");
+                    }
                     break;
 
                 case 5:
@@ -120,7 +121,6 @@ public class Main {
                         String descricao = scanner.nextLine();
                         System.out.print("Valor: ");
                         double valor = scanner.nextDouble();
-
                         Pedido pedido = new Pedido();
                         pedido.setDescricao(descricao);
                         pedido.setValor(valor);
@@ -142,6 +142,18 @@ public class Main {
                     break;
 
                 case 7:
+                    System.out.print("ID do pedido a cancelar: ");
+                    int idCancelar = scanner.nextInt();
+                    Pedido pedidoCancelar = pedidoDAO.buscarPorId(idCancelar);
+                    if (pedidoCancelar == null) {
+                        System.out.println("Pedido não encontrado!");
+                    } else {
+                        pedidoDAO.deletar(idCancelar);
+                        System.out.println("Pedido cancelado com sucesso!");
+                    }
+                    break;
+
+                case 8:
                     System.out.println("Saindo...");
                     break;
 
